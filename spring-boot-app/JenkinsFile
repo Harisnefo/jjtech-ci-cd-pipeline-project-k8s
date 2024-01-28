@@ -86,36 +86,36 @@ pipeline {
                 echo 'Generated Analysis Result'
             }
         }
-    }
-    stage('Static Code Analysis') {
-      environment {
-        SONAR_URL = "http://44.201.109.93:9000/"
-      }
-      steps {
-        withCredentials([string(credentialsId: 'sonarqube-token', variable: 'SONAR_AUTH_TOKEN')]) {
-          sh 'cd spring-boot-app && mvn sonar:sonar -Dsonar.login=$SONAR_AUTH_TOKEN -Dsonar.host.url=${SONAR_URL}'
-        }
-      }
-    }
+    // }
+    // stage('Static Code Analysis') {
+    //   environment {
+    //     SONAR_URL = "http://44.201.109.93:9000/"
+    //   }
+    //   steps {
+    //     withCredentials([string(credentialsId: 'sonarqube-token', variable: 'SONAR_AUTH_TOKEN')]) {
+    //       sh 'cd spring-boot-app && mvn sonar:sonar -Dsonar.login=$SONAR_AUTH_TOKEN -Dsonar.host.url=${SONAR_URL}'
+    //     }
+    //   }
+    // }
 
-    stage('Upload artifact to Nexus') {
-       steps {
-           withCredentials([usernamePassword(credentialsId: 'nexus-credentials', passwordVariable: 'PASSWORD', usernameVariable: 'USER_NAME')]) {
-           sh "sed -i \"s/.*<username><\\/username>/<username>$USER_NAME<\\/username>/g\" ${WORKSPACE}/nexus-setup/settings.xml"
-           sh "sed -i \"s/.*<password><\\/password>/<password>$PASSWORD<\\/password>/g\" ${WORKSPACE}/nexus-setup/settings.xml"
-           sh 'sudo cp ${WORKSPACE}/nexus-setup/settings.xml /var/lib/jenkins/.m2'
-           sh 'cd spring-boot-app && mvn clean deploy -DskipTests'
-           }
+    // stage('Upload artifact to Nexus') {
+    //    steps {
+    //        withCredentials([usernamePassword(credentialsId: 'nexus-credentials', passwordVariable: 'PASSWORD', usernameVariable: 'USER_NAME')]) {
+    //        sh "sed -i \"s/.*<username><\\/username>/<username>$USER_NAME<\\/username>/g\" ${WORKSPACE}/nexus-setup/settings.xml"
+    //        sh "sed -i \"s/.*<password><\\/password>/<password>$PASSWORD<\\/password>/g\" ${WORKSPACE}/nexus-setup/settings.xml"
+    //        sh 'sudo cp ${WORKSPACE}/nexus-setup/settings.xml /var/lib/jenkins/.m2'
+    //        sh 'cd spring-boot-app && mvn clean deploy -DskipTests'
+    //        }
           
-       }
-     }
+    //    }
+    //  }
 
 
     stage('Build and Push Docker Image') {
       environment {
-        awsAccountId = '389029577690'
+        awsAccountId = '425018001744'
         region = 'us-east-1'
-        repositoryName = 'jjtech-demo'
+        repositoryName = 'netfox-pipeline-repo'
         dockerImageTag = "${BUILD_NUMBER}"
         ecrRegistry = "${awsAccountId}.dkr.ecr.${region}.amazonaws.com"
       }
@@ -129,7 +129,7 @@ pipeline {
                 sh "docker tag ${repositoryName}:${dockerImageTag} ${ecrRegistry}/${repositoryName}:${dockerImageTag}"
                 sh "docker push ${ecrRegistry}/${repositoryName}:${dockerImageTag}"
                 sh "docker rmi ${ecrRegistry}/${repositoryName}:${dockerImageTag}"
-                sh " docker rmi ${repositoryName}:${dockerImageTag}"
+                sh "docker rmi ${repositoryName}:${dockerImageTag}"
       }
     }
 
