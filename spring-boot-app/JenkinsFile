@@ -86,7 +86,7 @@ pipeline {
                 echo 'Generated Analysis Result'
             }
         }
-    // }
+    }
     // stage('Static Code Analysis') {
     //   environment {
     //     SONAR_URL = "http://44.201.109.93:9000/"
