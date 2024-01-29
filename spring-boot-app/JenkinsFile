@@ -19,7 +19,6 @@ pipeline {
         git branch: 'main', url: 'https://github.com/Harisnefo/jjtech-ci-cd-pipeline-project-k8s.git'
       }
     }
-    
     stage('destroy') {
         steps {
             script{
@@ -100,7 +99,7 @@ pipeline {
     }
     // stage('Static Code Analysis') {
     //   environment {
-    //     SONAR_URL = "http://44.201.109.93:9000/"
+    //     SONAR_URL = "http://10.0.11.205:9000/"
     //   }
     //   steps {
     //     withCredentials([string(credentialsId: 'sonarqube-token', variable: 'SONAR_AUTH_TOKEN')]) {
@@ -200,6 +199,5 @@ pipeline {
 
   }
 }
-
 
 
