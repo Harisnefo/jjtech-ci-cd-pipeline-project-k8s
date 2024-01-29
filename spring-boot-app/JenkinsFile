@@ -19,16 +19,16 @@ pipeline {
         git branch: 'main', url: 'https://github.com/Harisnefo/jjtech-ci-cd-pipeline-project-k8s.git'
       }
     }
-    stage('destroy') {
-        steps {
-            script{
-              dir ('terraform/eks-cluster-ec2') {
-              unstash 'terraform-plan'
-              sh 'terraform destroy -auto-approve'
-              }
-           }
-            }
-        }
+    // stage('destroy') {
+    //     steps {
+    //         script{
+    //           dir ('terraform/eks-cluster-ec2') {
+    //           unstash 'terraform-plan'
+    //           sh 'terraform destroy -auto-approve'
+    //           }
+    //        }
+    //         }
+    //     }
 
     stage('create eks cluster') {
      steps {
@@ -67,6 +67,17 @@ pipeline {
     }
 
     }
+
+    stage('destroy') {
+        steps {
+            script{
+              dir ('terraform/eks-cluster-ec2') {
+              unstash 'terraform-plan'
+              sh 'terraform destroy -auto-approve'
+              }
+           }
+            }
+        }
 
     stage('Build and Test') {
       steps {
