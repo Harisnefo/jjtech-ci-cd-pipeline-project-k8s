@@ -68,16 +68,16 @@ pipeline {
 
     }
 
-    stage('destroy') {
-        steps {
-            script{
-              dir ('terraform/eks-cluster-ec2') {
-              unstash 'terraform-plan'
-              sh 'terraform destroy -auto-approve'
-              }
-           }
-            }
-        }
+    // stage('destroy') {
+    //     steps {
+    //         script{
+    //           dir ('terraform/eks-cluster-ec2') {
+    //           unstash 'terraform-plan'
+    //           sh 'terraform destroy -auto-approve'
+    //           }
+    //        }
+    //         }
+    //     }
 
     stage('Build and Test') {
       steps {
@@ -131,16 +131,16 @@ pipeline {
     //    }
     //  }
 
-    stage('Install docker') {
-          steps {
-              sh '''
-                  sh "sudo yum install docker -y" 
-                  sh "sudo systemctl start docker"
-                  sh "sudo systemctl  enable docker"
-                  sh "sudo usermod -a -G docker jenkins"
-              '''
-          }
-      }
+    // stage('Install docker') {
+    //       steps {
+    //           sh '''
+    //               sh "sudo yum install docker -y" 
+    //               sh "sudo systemctl start docker"
+    //               sh "sudo systemctl  enable docker"
+    //               sh "sudo usermod -a -G docker jenkins"
+    //           '''
+    //       }
+    //   }
 
     stage('Build and Push Docker Image') {
       environment {
@@ -173,23 +173,23 @@ pipeline {
 
     } 
     
-    stage('Install kubectl') {
-            steps {
-                sh '''
-                    # Specify the kubectl version
-                    KUBECTL_VERSION="v1.24.0"
+    // stage('Install kubectl') {
+    //         steps {
+    //             sh '''
+    //                 # Specify the kubectl version
+    //                 KUBECTL_VERSION="v1.24.0"
 
-                    # Download kubectl binary
-                    curl -LO "https://storage.googleapis.com/kubernetes-release/release/${KUBECTL_VERSION}/bin/linux/amd64/kubectl"
+    //                 # Download kubectl binary
+    //                 curl -LO "https://storage.googleapis.com/kubernetes-release/release/${KUBECTL_VERSION}/bin/linux/amd64/kubectl"
 
-                    # Make the kubectl binary executable
-                    sudo chmod +x kubectl
+    //                 # Make the kubectl binary executable
+    //                 sudo chmod +x kubectl
 
-                    # Move kubectl binary to a directory in the PATH
-                    sudo mv kubectl /usr/local/bin/
-                '''
-            }
-        }
+    //                 # Move kubectl binary to a directory in the PATH
+    //                 sudo mv kubectl /usr/local/bin/
+    //             '''
+    //         }
+    //     }
         
 
     stage("Deploy to EKS"){
